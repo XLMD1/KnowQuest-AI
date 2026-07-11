@@ -1,0 +1,8 @@
+<div th:fragment="agent-result" class="bg-white rounded-lg shadow-sm p-6" th:if="${result != null}">
+    <div class="flex items-center gap-2 mb-4">
+        <span class="text-xs text-gray-400 font-medium">状态</span>
+        <span th:classappend="${status == 'DONE'} ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
+              class="text-xs px-2 py-1 rounded" th:text="${status}"></span>
+    </div>
+    <div class="mt-2 text-gray-800 leading-relaxed whitespace-pre-wrap" th:text="${result}"></div>
+</div>

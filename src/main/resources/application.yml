@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: zhiven
+  datasource:
+    url: jdbc:postgresql://localhost:5432/zhiven
+    username: ${DB_USER:zhiven}
+    password: ${DB_PASSWORD:zhiven}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+  ai:
+    openai:
+      api-key: ${DEEPSEEK_API_KEY}
+      base-url: https://api.deepseek.com
+      chat:
+        options:
+          model: deepseek-chat
+          temperature: 0.3
+      embedding:
+        options:
+          model: deepseek-embedding
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.zhiven: DEBUG

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问答历史 - 知问</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div th:replace="~{layout :: navbar}"></div>
+
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <h1 class="text-xl font-bold text-gray-800 mb-6">问答历史</h1>
+
+        <div class="space-y-4">
+            <div th:each="h : ${histories}" class="bg-white rounded-lg shadow-sm p-4">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xs bg-gray-100 px-2 py-0.5 rounded" th:text="${h.route}"></span>
+                    <span class="text-xs text-gray-400"
+                          th:text="${#temporals.format(h.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+                </div>
+                <p class="text-sm font-medium text-gray-700">Q: <span th:text="${h.question}"></span></p>
+                <p class="text-sm text-gray-600 mt-2 line-clamp-3" th:text="${h.answer}"></p>
+            </div>
+            <div th:if="${#lists.isEmpty(histories)}" class="text-center text-gray-400 py-12">
+                暂无问答记录
+            </div>
+        </div>
+    </main>
+</body>
+</html>

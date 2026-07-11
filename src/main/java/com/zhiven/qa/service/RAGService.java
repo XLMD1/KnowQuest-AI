@@ -98,14 +98,18 @@ public class RAGService {
 
     private String toSourcesJson(List<Document> docs) {
         return docs.stream()
-                .map(d -> String.format("{\"doc_id\":%s,\"chunk_index\":%s,\"content\":\"%s\"}",
-                        d.getMetadata().getOrDefault("doc_id", ""),
-                        d.getMetadata().getOrDefault("chunk_index", ""),
+                .map(d -> String.format("{\"doc_id\":\"%s\",\"chunk_index\":\"%s\",\"content\":\"%s\"}",
+                        escapeJson(String.valueOf(d.getMetadata().getOrDefault("doc_id", ""))),
+                        escapeJson(String.valueOf(d.getMetadata().getOrDefault("chunk_index", ""))),
                         escapeJson(d.getContent() != null ? d.getContent().substring(0, Math.min(100, d.getContent().length())) : "")))
                 .collect(Collectors.joining(",", "[", "]"));
     }
 
     private String escapeJson(String s) {
-        return s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n");
+        return s.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t");
     }
 }

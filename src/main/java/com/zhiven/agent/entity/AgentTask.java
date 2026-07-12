@@ -36,7 +36,7 @@ public class AgentTask {
     public AgentTask(User user, String request) {
         this.user = user;
         this.request = request;
-        this.status = "PENDING";
+        this.status = "RUNNING";
     }
 
     public Long getId() { return id; }

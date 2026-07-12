@@ -20,26 +20,21 @@ public class RAGService {
     private static final Logger log = LoggerFactory.getLogger(RAGService.class);
 
     private final VectorStore vectorStore;
-    private final ChatClient.Builder chatClientBuilder;
+    private final ChatClient chatClient;
     private final QaHistoryRepository qaHistoryRepository;
 
     public RAGService(VectorStore vectorStore,
                       ChatClient.Builder chatClientBuilder,
                       QaHistoryRepository qaHistoryRepository) {
         this.vectorStore = vectorStore;
-        this.chatClientBuilder = chatClientBuilder;
+        this.chatClient = chatClientBuilder.build();
         this.qaHistoryRepository = qaHistoryRepository;
     }
 
     public record Answer(String content, List<String> sources) {}
 
     public Answer ask(String question, User user) {
-        String route = QueryRouter.route(question);
-
-        if ("SEARCH".equals(route)) {
-            // 阶段 1 搜索走 RAG fallback（SearchService 预留）
-            return ragAnswer(question, user);
-        }
+        // 阶段 1 SEARCH 路由走 RAG fallback（SearchService 占位）
         return ragAnswer(question, user);
     }
 
@@ -54,7 +49,7 @@ public class RAGService {
 
         if (docs.isEmpty()) {
             String fallback = "未找到与您问题相关的文档内容。请先上传相关文档。";
-            saveHistory(user, question, fallback, "[]", "RAG");
+            saveHistory(user, question, fallback, "[]");
             return new Answer(fallback, List.of());
         }
 
@@ -74,7 +69,6 @@ public class RAGService {
                 请用中文回答，并在答案末尾列出引用的文档名称。
                 """.formatted(context, question);
 
-        ChatClient chatClient = chatClientBuilder.build();
         String answer = chatClient.prompt()
                 .user(prompt)
                 .call()
@@ -85,14 +79,14 @@ public class RAGService {
                 .distinct()
                 .collect(Collectors.toList());
 
-        saveHistory(user, question, answer, toSourcesJson(docs), "RAG");
+        saveHistory(user, question, answer, toSourcesJson(docs));
 
-        log.info("RAG 问答完成: {} → {} tokens", question, answer != null ? answer.length() : 0);
+        log.info("RAG 问答完成: {} → {} chars", question, answer != null ? answer.length() : 0);
         return new Answer(answer, sources);
     }
 
-    private void saveHistory(User user, String question, String answer, String sources, String route) {
-        QaHistory history = new QaHistory(user, question, answer, sources, route);
+    private void saveHistory(User user, String question, String answer, String sources) {
+        QaHistory history = new QaHistory(user, question, answer, sources, "RAG");
         qaHistoryRepository.save(history);
     }
 

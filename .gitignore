@@ -8,3 +8,4 @@ target/
 .env
 application-local.yml
 task-brief.sh
+.vscode/

@@ -17,7 +17,6 @@ public class FormatConvertTool implements Tool {
 
     @Override
     public String execute(String input) {
-        // 阶段 1 简单实现：追加格式标记
         String[] parts = input.split("\\|", 2);
         String content = parts.length > 1 ? parts[1] : parts[0];
         String format = parts.length > 1 ? parts[0] : "报告";

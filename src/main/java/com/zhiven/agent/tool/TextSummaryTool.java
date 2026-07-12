@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class TextSummaryTool implements Tool {
 
-    private final ChatClient.Builder chatClientBuilder;
+    private final ChatClient chatClient;
 
     public TextSummaryTool(ChatClient.Builder chatClientBuilder) {
-        this.chatClientBuilder = chatClientBuilder;
+        this.chatClient = chatClientBuilder.build();
     }
 
     @Override
@@ -24,8 +24,7 @@ public class TextSummaryTool implements Tool {
 
     @Override
     public String execute(String input) {
-        ChatClient client = chatClientBuilder.build();
-        return client.prompt()
+        return chatClient.prompt()
                 .user("请对以下文本进行摘要总结，提取3-5个关键要点：\n\n" + input)
                 .call()
                 .content();

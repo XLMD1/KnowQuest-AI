@@ -16,26 +16,23 @@ public class AgentService {
 
     private static final Logger log = LoggerFactory.getLogger(AgentService.class);
 
-    private final ChatClient.Builder chatClientBuilder;
+    private final ChatClient chatClient;
     private final ToolRegistry toolRegistry;
     private final AgentTaskRepository agentTaskRepository;
 
     public AgentService(ChatClient.Builder chatClientBuilder,
                         ToolRegistry toolRegistry,
                         AgentTaskRepository agentTaskRepository) {
-        this.chatClientBuilder = chatClientBuilder;
+        this.chatClient = chatClientBuilder.build();
         this.toolRegistry = toolRegistry;
         this.agentTaskRepository = agentTaskRepository;
     }
 
     public AgentTask execute(String request, User user) {
         AgentTask task = new AgentTask(user, request);
-        task.setStatus("RUNNING");
         agentTaskRepository.save(task);
 
         try {
-            ChatClient client = chatClientBuilder.build();
-
             String planPrompt = """
                     你是一个智能任务助手。用户委托你完成以下任务。
                     可用工具：
@@ -51,10 +48,11 @@ public class AgentService {
                     用户委托：%s
                     """.formatted(toolRegistry.describeTools(), request);
 
-            String response = client.prompt().user(planPrompt).call().content();
+            String response = chatClient.prompt().user(planPrompt).call().content();
 
-            String result = processToolCalls(response);
-            List<String> used = parseToolsUsed(response);
+            var toolResult = processToolCalls(response);
+            String result = toolResult.result;
+            List<String> used = toolResult.toolsUsed;
 
             task.setResult(result);
             task.setToolsUsed(used.toString());
@@ -69,8 +67,11 @@ public class AgentService {
         return agentTaskRepository.save(task);
     }
 
-    private String processToolCalls(String response) {
+    private record ToolCallResult(String result, List<String> toolsUsed) {}
+
+    private ToolCallResult processToolCalls(String response) {
         StringBuilder result = new StringBuilder();
+        List<String> toolsUsed = new java.util.ArrayList<>();
         int idx = 0;
 
         while (true) {
@@ -82,7 +83,7 @@ public class AgentService {
             result.append(response, idx, start);
 
             int nameEnd = response.indexOf("]", start);
-            String toolName = response.substring(start + 6, nameEnd);
+            String toolName = response.substring(start + 6, nameEnd).trim();
 
             int contentStart = nameEnd + 1;
             int end = response.indexOf("[/TOOL]", contentStart);
@@ -91,16 +92,11 @@ public class AgentService {
             String input = response.substring(contentStart, end).trim();
             String toolResult = toolRegistry.get(toolName).execute(input);
             result.append("\n[工具 ").append(toolName).append(" 结果]\n").append(toolResult);
+            toolsUsed.add(toolName);
 
             idx = end + 7;
         }
 
-        return result.toString();
-    }
-
-    private List<String> parseToolsUsed(String response) {
-        return toolRegistry.listToolNames().stream()
-                .filter(response::contains)
-                .toList();
+        return new ToolCallResult(result.toString(), toolsUsed);
     }
 }

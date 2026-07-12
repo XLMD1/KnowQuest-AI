@@ -17,7 +17,6 @@ public class AIConfig {
     EmbeddingModel embeddingModel(@Value("${DASHSCOPE_API_KEY}") String apiKey) {
         OpenAiApi openAiApi = new OpenAiApi("https://dashscope.aliyuncs.com/compatible-mode/v1", apiKey);
         return new OpenAiEmbeddingModel(openAiApi,
-                org.springframework.ai.model.MetadataMode.EMBED,
                 OpenAiEmbeddingOptions.builder().withModel("text-embedding-v3").build());
     }
 

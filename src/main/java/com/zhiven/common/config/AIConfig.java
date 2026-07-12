@@ -17,7 +17,7 @@ public class AIConfig {
     EmbeddingModel embeddingModel(@Value("${DASHSCOPE_API_KEY}") String apiKey) {
         OpenAiApi openAiApi = new OpenAiApi("https://dashscope.aliyuncs.com/compatible-mode", apiKey);
         OpenAiEmbeddingOptions options = OpenAiEmbeddingOptions.builder()
-                .withModel("text-embedding-v3")
+                .model("text-embedding-v3")
                 .build();
         return new OpenAiEmbeddingModel(openAiApi, options);
     }

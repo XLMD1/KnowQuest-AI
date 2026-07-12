@@ -2,6 +2,7 @@ package com.zhiven.common.config;
 
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.openai.OpenAiEmbeddingModel;
+import org.springframework.ai.openai.OpenAiEmbeddingOptions;
 import org.springframework.ai.openai.api.OpenAiApi;
 import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -15,7 +16,10 @@ public class AIConfig {
     @Bean
     EmbeddingModel embeddingModel(@Value("${DASHSCOPE_API_KEY}") String apiKey) {
         OpenAiApi openAiApi = new OpenAiApi("https://dashscope.aliyuncs.com/compatible-mode", apiKey);
-        return new OpenAiEmbeddingModel(openAiApi);
+        OpenAiEmbeddingOptions options = OpenAiEmbeddingOptions.builder()
+                .withModel("text-embedding-v3")
+                .build();
+        return new OpenAiEmbeddingModel(openAiApi, options);
     }
 
     @Bean

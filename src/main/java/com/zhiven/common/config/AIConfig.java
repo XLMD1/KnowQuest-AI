@@ -1,5 +1,6 @@
 package com.zhiven.common.config;
 
+import org.springframework.ai.document.MetadataMode;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.ai.openai.OpenAiEmbeddingOptions;
@@ -19,7 +20,7 @@ public class AIConfig {
         OpenAiEmbeddingOptions options = OpenAiEmbeddingOptions.builder()
                 .model("text-embedding-v3")
                 .build();
-        return new OpenAiEmbeddingModel(openAiApi, options);
+        return new OpenAiEmbeddingModel(openAiApi, MetadataMode.EMBED, options);
     }
 
     @Bean

@@ -21,9 +21,6 @@ spring:
         options:
           model: deepseek-chat
           temperature: 0.3
-      embedding:
-        options:
-          model: deepseek-embedding
 
 server:
   port: 8080

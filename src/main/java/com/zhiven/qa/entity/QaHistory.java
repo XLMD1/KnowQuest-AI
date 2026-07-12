@@ -22,7 +22,7 @@ public class QaHistory {
     @Column(columnDefinition = "TEXT")
     private String answer;
 
-    @Column(columnDefinition = "JSONB")
+    @Column(columnDefinition = "TEXT")
     private String sources;
 
     @Column(length = 10)

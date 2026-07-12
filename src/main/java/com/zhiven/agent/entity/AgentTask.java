@@ -22,7 +22,7 @@ public class AgentTask {
     @Column(columnDefinition = "TEXT")
     private String result;
 
-    @Column(name = "tools_used", columnDefinition = "JSONB")
+    @Column(name = "tools_used", columnDefinition = "TEXT")
     private String toolsUsed;
 
     @Column(length = 20)

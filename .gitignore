@@ -9,3 +9,4 @@ target/
 application-local.yml
 task-brief.sh
 .vscode/
+start.bat

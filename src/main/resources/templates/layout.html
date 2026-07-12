@@ -1,0 +1,17 @@
+<nav th:fragment="navbar" class="bg-white shadow-sm border-b"
+     xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+        <a href="/" class="text-lg font-bold text-blue-700">知问</a>
+        <div class="flex items-center gap-4">
+            <a href="/docs" class="text-sm text-gray-600 hover:text-blue-600 transition">文档</a>
+            <a href="/qa" class="text-sm text-gray-600 hover:text-blue-600 transition">问答</a>
+            <a href="/agent" class="text-sm text-gray-600 hover:text-blue-600 transition">任务</a>
+            <a href="/history" class="text-sm text-gray-600 hover:text-blue-600 transition">历史</a>
+            <span class="text-sm text-gray-400" sec:authentication="name"></span>
+            <form th:action="@{/logout}" method="post" class="inline">
+                <button class="text-sm text-gray-500 hover:text-red-600 transition">退出</button>
+            </form>
+        </div>
+    </div>
+</nav>

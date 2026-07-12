@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知问 文档智能体</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div th:replace="~{layout :: navbar}"></div>
+
+    <main class="max-w-4xl mx-auto px-4 py-16 text-center">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">知问 文档智能体</h1>
+        <p class="text-gray-500 mb-12">上传文档，用自然语言精准问答、编辑、生成</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="/docs" class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition">
+                <div class="text-blue-600 text-2xl mb-3">+</div>
+                <h2 class="font-semibold text-gray-800 mb-2">文档管理</h2>
+                <p class="text-sm text-gray-500">上传 PDF、Word、Excel 等文档</p>
+            </a>
+            <a href="/qa" class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition">
+                <div class="text-green-600 text-2xl mb-3">?</div>
+                <h2 class="font-semibold text-gray-800 mb-2">智能问答</h2>
+                <p class="text-sm text-gray-500">基于文档内容精准问答</p>
+            </a>
+            <a href="/agent" class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition">
+                <div class="text-purple-600 text-2xl mb-3">~</div>
+                <h2 class="font-semibold text-gray-800 mb-2">任务委托</h2>
+                <p class="text-sm text-gray-500">AI 自主调用工具完成复杂任务</p>
+            </a>
+        </div>
+    </main>
+</body>
+</html>

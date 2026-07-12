@@ -16,7 +16,8 @@
         <div class="bg-white p-6 rounded-lg shadow-sm mb-6">
             <form hx-post="/qa/ask"
                   hx-target="#qa-result"
-                  hx-indicator="#qa-loading">
+                  hx-indicator="#qa-loading"
+                  hx-trigger="submit">
                 <label class="block text-sm font-medium text-gray-700 mb-2">提出你的问题</label>
                 <textarea name="question" rows="3" required
                           placeholder="例如：这份合同的核心条款是什么？第三章讲了什么？"
@@ -35,5 +36,12 @@
 
         <div id="qa-result"></div>
     </main>
+
+    <script>
+        document.body.addEventListener('htmx:afterRequest', function(evt) {
+            console.log('htmx request completed:', evt.detail);
+        });
+        console.log('htmx version:', window.htmx ? htmx.version : 'NOT LOADED');
+    </script>
 </body>
 </html>
